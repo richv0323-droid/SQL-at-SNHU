@@ -1,0 +1,134 @@
+codio@vivaravioli-sizeyear:~/workspace$ mysql
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 9
+Server version: 8.0.31-0ubuntu0.22.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use villarreal
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> CREATE TABLE Employee (
+    -> Employee_ID SMALLINT,
+    -> First_Name VARCHAR(40),
+    -> Last_Name VARCHAR(60),
+    -> Department_ID SMALLINT,
+    -> Classification VARCHAR(10),
+    -> STATUS VARCHAR(10),
+    -> Salary DECIMAL(7,2));
+ERROR 1050 (42S01): Table 'Employee' already exists
+mysql> CREATE TABLE Branches (
+    -> Department_ID SMALLINT,
+    -> Department_Name VARCHAR(50));
+Query OK, 0 rows affected (0.22 sec)
+
+mysql> DESCRIBE Employee;
++----------------+--------------+------+-----+---------+-------+
+| Field          | Type         | Null | Key | Default | Extra |
++----------------+--------------+------+-----+---------+-------+
+| Employee_ID    | smallint     | YES  |     | NULL    |       |
+| First_Name     | varchar(40)  | YES  |     | NULL    |       |
+| Last_Name      | varchar(60)  | YES  |     | NULL    |       |
+| Department_ID  | smallint     | YES  |     | NULL    |       |
+| Classification | varchar(10)  | YES  |     | NULL    |       |
+| STATUS         | varchar(10)  | YES  |     | NULL    |       |
+| Salary         | decimal(7,2) | YES  |     | NULL    |       |
++----------------+--------------+------+-----+---------+-------+
+7 rows in set (0.01 sec)
+
+mysql> DESCRIBE Branches;
++-----------------+-------------+------+-----+---------+-------+
+| Field           | Type        | Null | Key | Default | Extra |
++-----------------+-------------+------+-----+---------+-------+
+| Department_ID   | smallint    | YES  |     | NULL    |       |
+| Department_Name | varchar(50) | YES  |     | NULL    |       |
++-----------------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> INSERT INTO Employee VALUES  
+    -> 
+    -> (100, 'John', 'Smith', 1, 'Exempt', 'Full-Time', 90000),  
+    -> 
+    -> (101,'Mary','Jones',2,'Non-Exempt','Part-Time',35000), 
+    -> 
+    -> (102,'Mary','Williams',3,'Exempt','Full-Time',80000);
+Query OK, 3 rows affected (0.05 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM Employee;
++-------------+------------+-----------+---------------+----------------+-----------+----------+
+| Employee_ID | First_Name | Last_Name | Department_ID | Classification | STATUS    | Salary   |
++-------------+------------+-----------+---------------+----------------+-----------+----------+
+|         100 | John       | Smith     |             1 | Exempt         | Full-Time | 90000.00 |
+|         101 | Mary       | Jones     |             2 | Non-Exempt     | Part-Time | 35000.00 |
+|         102 | Mary       | Williams  |             3 | Exempt         | Full-Time | 80000.00 |
++-------------+------------+-----------+---------------+----------------+-----------+----------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO Employee VALUES
+    -> (103, 'Gwen', 'Johnson', 4, NULL, 'Full-Time', 40000),
+    -> (104, 'Michael', 'Jones', 4, 'Non-Exempt', 'Full-Time', 90000),
+    -> (105, 'Ricardo', 'Villarreal', 1, 'Non-Exempt', 'Full-Time', 99000);
+Query OK, 3 rows affected (0.07 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM Employee;
++-------------+------------+------------+---------------+----------------+-----------+----------+
+| Employee_ID | First_Name | Last_Name  | Department_ID | Classification | STATUS    | Salary   |
++-------------+------------+------------+---------------+----------------+-----------+----------+
+|         100 | John       | Smith      |             1 | Exempt         | Full-Time | 90000.00 |
+|         101 | Mary       | Jones      |             2 | Non-Exempt     | Part-Time | 35000.00 |
+|         102 | Mary       | Williams   |             3 | Exempt         | Full-Time | 80000.00 |
+|         103 | Gwen       | Johnson    |             4 | NULL           | Full-Time | 40000.00 |
+|         104 | Michael    | Jones      |             4 | Non-Exempt     | Full-Time | 90000.00 |
+|         105 | Ricardo    | Villarreal |             1 | Non-Exempt     | Full-Time | 99000.00 |
++-------------+------------+------------+---------------+----------------+-----------+----------+
+6 rows in set (0.00 sec)
+
+mysql> INSERT INTO Employee VALUES
+    -> (106, 'Saul', 'Alvarez', 1, 'Non-Exempt', 'Full-Time', 90000);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> SELECT * FROM Employee;
++-------------+------------+------------+---------------+----------------+-----------+----------+
+| Employee_ID | First_Name | Last_Name  | Department_ID | Classification | STATUS    | Salary   |
++-------------+------------+------------+---------------+----------------+-----------+----------+
+|         100 | John       | Smith      |             1 | Exempt         | Full-Time | 90000.00 |
+|         101 | Mary       | Jones      |             2 | Non-Exempt     | Part-Time | 35000.00 |
+|         102 | Mary       | Williams   |             3 | Exempt         | Full-Time | 80000.00 |
+|         103 | Gwen       | Johnson    |             4 | NULL           | Full-Time | 40000.00 |
+|         104 | Michael    | Jones      |             4 | Non-Exempt     | Full-Time | 90000.00 |
+|         105 | Ricardo    | Villarreal |             1 | Non-Exempt     | Full-Time | 99000.00 |
+|         106 | Saul       | Alvarez    |             1 | Non-Exempt     | Full-Time | 90000.00 |
++-------------+------------+------------+---------------+----------------+-----------+----------+
+7 rows in set (0.01 sec)
+
+mysql> SELECT First_Name, Last_Name, Employee_ID, Department_ID FROM Employee;
++------------+------------+-------------+---------------+
+| First_Name | Last_Name  | Employee_ID | Department_ID |
++------------+------------+-------------+---------------+
+| John       | Smith      |         100 |             1 |
+| Mary       | Jones      |         101 |             2 |
+| Mary       | Williams   |         102 |             3 |
+| Gwen       | Johnson    |         103 |             4 |
+| Michael    | Jones      |         104 |             4 |
+| Ricardo    | Villarreal |         105 |             1 |
+| Saul       | Alvarez    |         106 |             1 |
++------------+------------+-------------+---------------+
+7 rows in set (0.00 sec)
+
+mysql> Git add;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Git add' at line 1
+mysql>  git remote add origin <https://github.com/richv0323-droid/SQL-at-SNHU>;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'git remote add origin <https://github.com/richv0323-droid/SQL-at-SNHU>' at line 1
+mysql> git push --set-upstream origin master;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'git push --set-upstream origin master' at line 1
+mysql> 
