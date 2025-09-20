@@ -1,0 +1,181 @@
+codio@vivaravioli-sizeyear:~/workspace$ mysql
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.31-0ubuntu0.22.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use villarreal;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> ALTER TABLE Branches RENAME TO department;
+ERROR 1146 (42S02): Table 'villarreal.Branches' doesn't exist
+mysql> INSERT INTO department VALUES
+    ->    (1, 'Accounting'),
+    ->     (2, 'Human Resources'),
+    ->     (3, 'Information Systems'),
+    ->     (4, 'Marketing');
+Query OK, 4 rows affected (0.04 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM department;
++---------------+---------------------+
+| Department_ID | Department_Name     |
++---------------+---------------------+
+|             1 | Accounting          |
+|             2 | Human Resources     |
+|             3 | Information Systems |
+|             4 | Marketing           |
++---------------+---------------------+
+4 rows in set (0.01 sec)
+
+mysql> SELECT First_Name, Last_Name, Department.Department_Name
+    -> FROM Employee
+    -> INNER JOIN Department ON Employee.Department_ID = Department.Department_ID
+    -> WHERE Employee.Department_ID = 1;
+ERROR 1146 (42S02): Table 'villarreal.Department' doesn't exist
+mysql> SELECT First_Name, Last_Name, department.Department_name
+    -> FROM Employee
+    -> INNER JOIN department ON Employee.Department_ID = department.Department_ID
+    -> WHERE Employee.Department_ID = 1;
++------------+------------+-----------------+
+| First_Name | Last_Name  | Department_name |
++------------+------------+-----------------+
+| John       | Smith      | Accounting      |
+| Ricardo    | Villarreal | Accounting      |
+| Saul       | Alvarez    | Accounting      |
++------------+------------+-----------------+
+3 rows in set (0.01 sec)
+
+mysql> INSERT INTO Employee VALUES
+    -> (107, 'Tom', 'Hanks', 2, 'Exempt', 'Full-Time', 85000),
+    -> (108, 'Beyonce', 'Knowles', 3, 'Non-Exempt', 'Part-Time', 72000),
+    -> (109, 'Leonardo', 'DiCaprio', 1, 'Exempt', 'Full-Time', 95000),
+    -> (110, 'Oprah', 'Winfrey', 4, 'Non-Exempt', 'Full-Time', 88000),
+    -> (111, 'Elon', 'Musk', 2, 'Non-Exempt', 'Full-Time', 99000),
+    -> (112, 'Taylor', 'Swift', 1, 'Exempt', 'Full-Time', 91000),
+    -> (113, 'Dwayne', 'Johnson', 3, 'Non-Exempt', 'Full-Time', 87000),
+    -> (114, 'Ariana', 'Grande', 4, 'Non-Exempt', 'Part-Time', 68000),
+    -> (115, 'Chris', 'Hemsworth', 2, 'Exempt', 'Full-Time', 77000),
+    -> (116, 'Serena', 'Williams', 1, 'Exempt', 'Full-Time', 94000);
+Query OK, 10 rows affected (0.05 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM Employee;
++-------------+------------+------------+---------------+----------------+-----------+----------+
+| Employee_ID | First_Name | Last_Name  | Department_ID | Classification | STATUS    | Salary   |
++-------------+------------+------------+---------------+----------------+-----------+----------+
+|         100 | John       | Smith      |             1 | Exempt         | Full-Time | 90000.00 |
+|         101 | Mary       | Jones      |             2 | Non-Exempt     | Part-Time | 35000.00 |
+|         102 | Mary       | Williams   |             3 | Exempt         | Full-Time | 80000.00 |
+|         103 | Gwen       | Johnson    |             4 | NULL           | Full-Time | 40000.00 |
+|         104 | Michael    | Jones      |             4 | Non-Exempt     | Full-Time | 90000.00 |
+|         105 | Ricardo    | Villarreal |             1 | Non-Exempt     | Full-Time | 99000.00 |
+|         106 | Saul       | Alvarez    |             1 | Non-Exempt     | Full-Time | 90000.00 |
+|         107 | Tom        | Hanks      |             2 | Exempt         | Full-Time | 85000.00 |
+|         108 | Beyonce    | Knowles    |             3 | Non-Exempt     | Part-Time | 72000.00 |
+|         109 | Leonardo   | DiCaprio   |             1 | Exempt         | Full-Time | 95000.00 |
+|         110 | Oprah      | Winfrey    |             4 | Non-Exempt     | Full-Time | 88000.00 |
+|         111 | Elon       | Musk       |             2 | Non-Exempt     | Full-Time | 99000.00 |
+|         112 | Taylor     | Swift      |             1 | Exempt         | Full-Time | 91000.00 |
+|         113 | Dwayne     | Johnson    |             3 | Non-Exempt     | Full-Time | 87000.00 |
+|         114 | Ariana     | Grande     |             4 | Non-Exempt     | Part-Time | 68000.00 |
+|         115 | Chris      | Hemsworth  |             2 | Exempt         | Full-Time | 77000.00 |
+|         116 | Serena     | Williams   |             1 | Exempt         | Full-Time | 94000.00 |
++-------------+------------+------------+---------------+----------------+-----------+----------+
+17 rows in set (0.00 sec)
+
+mysql> SELECT First_Name, Last_Name, department.Department_NAME
+    -> FROM Employee
+    -> INNER JOIN department ON Employee.Department_ID = Department.Department_ID                                department.Department_ID
+    -> WHERE Employee.Department_ID = 1;
++------------+------------+-----------------+
+| First_Name | Last_Name  | Department_NAME |
++------------+------------+-----------------+
+| John       | Smith      | Accounting      |
+| Ricardo    | Villarreal | Accounting      |
+| Saul       | Alvarez    | Accounting      |
+| Leonardo   | DiCaprio   | Accounting      |
+| Taylor     | Swift      | Accounting      |
+| Serena     | Williams   | Accounting      |
++------------+------------+-----------------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT First_Name, Last_Name, department.Department_NAME
+    -> FROM Employee
+    -> INNER JOIN department ON Employee.Department_ID = department.Department_ID
+    -> WHERE Emplyee.Department_ID = 2;
+ERROR 1054 (42S22): Unknown column 'Emplyee.Department_ID' in 'where clause'
+mysql> SELECT First_Name, Last_Name, department.Department_NAME
+    ->     -> FROM Employee
+    ->     -> INNER JOIN department ON Employee.Department_ID = department.Department_ID
+    ->     -> WHERE Emplyee.Department_ID = 2;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROM Employee
+    -> INNER JOIN department ON Employee.Department_ID = departmen' at line 2
+mysql> SELECT First_Name, Last_Name, department.Department_NAME
+    ->     -> FROM Employee
+    ->     -> INNER JOIN department ON Employee.Department_ID = department.Department_ID
+    ->     -> WHERE Employee.Department_ID = 2;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'FROM Employee
+    -> INNER JOIN department ON Employee.Department_ID = departmen' at line 2
+mysql> SELECT Employee.First_Name, Employee.Last_Name, department.Department_Name
+    -> FROM Employee
+    -> INNER JOIN department 
+    ->     ON Employee.Department_ID = department.Department_ID
+    -> WHERE Employee.Department_ID = 2;
++------------+-----------+-----------------+
+| First_Name | Last_Name | Department_Name |
++------------+-----------+-----------------+
+| Mary       | Jones     | Human Resources |
+| Tom        | Hanks     | Human Resources |
+| Elon       | Musk      | Human Resources |
+| Chris      | Hemsworth | Human Resources |
++------------+-----------+-----------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT Employee.First_Name, Employee.Last_Name, department.Department_Name
+    -> FROM Employee
+    -> INNER JOIN department 
+    ->     ON Employee.Department_ID = department.Department_ID
+    -> WHERE Employee.Department_ID = 3;
++------------+-----------+---------------------+
+| First_Name | Last_Name | Department_Name     |
++------------+-----------+---------------------+
+| Mary       | Williams  | Information Systems |
+| Beyonce    | Knowles   | Information Systems |
+| Dwayne     | Johnson   | Information Systems |
++------------+-----------+---------------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT Employee.First_Name, Employee.Last_Name, department.Department_Name
+    -> FROM Employee
+    -> INNER JOIN department 
+    ->     ON Employee.Department_ID = department.Department_ID
+    -> WHERE Employee.Department_ID = 4;
++------------+-----------+-----------------+
+| First_Name | Last_Name | Department_Name |
++------------+-----------+-----------------+
+| Gwen       | Johnson   | Marketing       |
+| Michael    | Jones     | Marketing       |
+| Oprah      | Winfrey   | Marketing       |
+| Ariana     | Grande    | Marketing       |
++------------+-----------+-----------------+
+4 rows in set (0.00 sec)
+
+mysql> Create a CSV file that contains only the records of employees in Human Remysql> SELECT First_Name, Last_Name, department.Department_Name
+    -> FROM Employee
+    -> INNER JOIN department ON Employee.Department_ID = department.Department_ID
+    -> WHERE Employee.Department_ID = 3 OR Employee.Department_ID = 2
+    -> INTO OUTFILE '/home/codio/workspace/HRandIS-Employees.csv'
+    -> FIELDS TERMINATED BY ',' LINES TERMINATED BY '\r\n';
+Query OK, 7 rows affected (0.04 sec)
+
+mysql> 
