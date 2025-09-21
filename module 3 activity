@@ -1,0 +1,116 @@
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 8
+Server version: 8.0.31-0ubuntu0.22.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> USE QuantigrationRMA;
+Database changed
+mysql> CREATE TABLE Customers ( 
+    -> CustomerID INT NOT NULL PRIMARY KEY,
+    -> FirstName VARCHAR(25),
+    -> LastName VARCHAR(25),
+    -> Street VARCHAR(50),
+    -> City VARCHAR(50),
+    -> State VARCHAR(25),
+    -> ZipCode VARCHAR(10),
+    -> Telephone VARCHAR(15)
+    -> );
+Query OK, 0 rows affected (0.27 sec)
+
+mysql> CREATE TABLE Orders (
+    -> OrderID INT NOT NULL PRIMARY KEY,
+    -> CustomerID INT,
+    -> SKU VARCHAR(20),
+    -> Description VARCHAR(50),
+    -> FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+    -> );
+Query OK, 0 rows affected (0.29 sec)
+
+mysql> CREATE TABLE RMA ( 
+    -> RMAID INT NOT NULL PRIMARY KEY,
+    -> OrderID INT,
+    -> Step VARCHAR(50),
+    -> Status VARCHAR(15),
+    -> Reason VARCHAR(15),
+    -> FOREIGN KEY (OrderID) REFERENCES Orders(OrderID)
+    -> );
+Query OK, 0 rows affected (0.36 sec)
+
+mysql> INSERT INTO Customers VALUES (100, 'Beyoncé', 'Knowles', '42 Halo Blvd.', 'Houston', 'TX', '75234', '713-555-2000');
+Query OK, 1 row affected (0.10 sec)
+
+mysql> INSERT INTO Customers VALUES (101, 'Drake', 'Graham', '17 Hotline Rd.', 'Miami', 'FL', '33187', '305-555-2001');
+Query OK, 1 row affected (0.05 sec)
+
+mysql> INSERT INTO Customers VALUES (102, 'Ed', 'Sheeran', '88 Divide St.', 'Los Angeles', 'CA', '90077', '323-555-2002');
+Query OK, 1 row affected (0.05 sec)
+
+mysql> INSERT INTO Customers VALUES (103, 'Ariana', 'Grande', '22 Moonlight Ln.', 'Boca Raton', 'FL', '33491', '561-555-2003');
+Query OK, 1 row affected (0.04 sec)
+
+mysql> INSERT INTO Customers VALUES (104, 'Bruno', 'Mars', '99 Uptown Ave.', 'Honolulu', 'HI', '96842', '808-555-2004');
+Query OK, 1 row affected (0.05 sec)
+
+mysql> INSERT INTO Customers VALUES (105, 'Billie', 'Eilish', '55 Ocean Eyes Ct.', 'Los Angeles', 'CA', '90029', '213-555-2005');
+Query OK, 1 row affected (0.05 sec)
+
+mysql> INSERT INTO Customers VALUES (106, 'The', 'Weeknd', '14 After Hours Way', 'Las Vegas', 'NV', '89142', '702-555-2006');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> INSERT INTO Customers VALUES (107, 'Lady', 'Gaga', '77 Poker Face Dr.', 'New York', 'NY', '10088', '212-555-2007');
+Query OK, 1 row affected (0.04 sec)
+
+mysql> INSERT INTO Customers VALUES (108, 'Kendrick', 'Lamar', '23 Humble Pkwy.', 'Compton', 'CA', '90244', '310-555-2008');
+Query OK, 1 row affected (0.05 sec)
+
+mysql> INSERT INTO Customers VALUES (109, 'Shakira', 'Mebarak', '1 HipsDontLie Pl.', 'Miami', 'FL', '33165', '786-555-2009');
+Query OK, 1 row affected (0.08 sec)
+
+mysql> CREATE VIEW Collaborator AS 
+    -> SELECT 
+    ->     CustomerID AS CollaboratorID, 
+    ->     FirstName, 
+    ->     LastName, 
+    ->     Street, 
+    ->     City, 
+    ->     State, 
+    ->     ZipCode, 
+    ->     Telephone 
+    -> FROM Customers;
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> DESCRIBE Collaborator;
++----------------+-------------+------+-----+---------+-------+
+| Field          | Type        | Null | Key | Default | Extra |
++----------------+-------------+------+-----+---------+-------+
+| CollaboratorID | int         | NO   |     | NULL    |       |
+| FirstName      | varchar(25) | YES  |     | NULL    |       |
+| LastName       | varchar(25) | YES  |     | NULL    |       |
+| Street         | varchar(50) | YES  |     | NULL    |       |
+| City           | varchar(50) | YES  |     | NULL    |       |
+| State          | varchar(25) | YES  |     | NULL    |       |
+| ZipCode        | varchar(10) | YES  |     | NULL    |       |
+| Telephone      | varchar(15) | YES  |     | NULL    |       |
++----------------+-------------+------+-----+---------+-------+
+8 rows in set (0.02 sec)
+
+mysql> SELECT  * FROM Collaborator LIMIT 5;
++----------------+-----------+----------+------------------+-------------+-------+---------+--------------+
+| CollaboratorID | FirstName | LastName | Street           | City        | State | ZipCode | Telephone    |
++----------------+-----------+----------+------------------+-------------+-------+---------+--------------+
+|            100 | Beyoncé   | Knowles  | 42 Halo Blvd.    | Houston     | TX    | 75234   | 713-555-2000 |
+|            101 | Drake     | Graham   | 17 Hotline Rd.   | Miami       | FL    | 33187   | 305-555-2001 |
+|            102 | Ed        | Sheeran  | 88 Divide St.    | Los Angeles | CA    | 90077   | 323-555-2002 |
+|            103 | Ariana    | Grande   | 22 Moonlight Ln. | Boca Raton  | FL    | 33491   | 561-555-2003 |
+|            104 | Bruno     | Mars     | 99 Uptown Ave.   | Honolulu    | HI    | 96842   | 808-555-2004 |
++----------------+-----------+----------+------------------+-------------+-------+---------+--------------+
+5 rows in set (0.00 sec)
+
+mysql> 
