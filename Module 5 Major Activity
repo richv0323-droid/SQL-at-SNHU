@@ -1,0 +1,144 @@
+codio@vivaravioli-sizeyear:~/workspace$ mysql
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 10
+Server version: 8.0.31-0ubuntu0.22.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2022, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> use QuantigrationRMA;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> show tables;
++----------------------------+
+| Tables_in_QuantigrationRMA |
++----------------------------+
+| Collaborator               |
+| Customers                  |
+| Orders                     |
+| RMA                        |
++----------------------------+
+4 rows in set (0.00 sec)
+
+mysql> describe orders;
+ERROR 1146 (42S02): Table 'QuantigrationRMA.orders' doesn't exist
+mysql> DESCRIBE Orders;
++-------------+--------------+------+-----+---------+-------+
+| Field       | Type         | Null | Key | Default | Extra |
++-------------+--------------+------+-----+---------+-------+
+| OrderID     | int          | NO   | PRI | NULL    |       |
+| CustomerID  | int          | YES  | MUL | NULL    |       |
+| SKU         | varchar(20)  | YES  |     | NULL    |       |
+| Description | varchar(255) | YES  |     | NULL    |       |
++-------------+--------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> DESCRIBE CUSTOMERS
+    -> ;
+ERROR 1146 (42S02): Table 'QuantigrationRMA.CUSTOMERS' doesn't exist
+mysql> DESCRIBE Customers;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| CustomerID | int         | NO   | PRI | NULL    |       |
+| FirstName  | varchar(25) | YES  |     | NULL    |       |
+| LastName   | varchar(25) | YES  |     | NULL    |       |
+| Street     | varchar(50) | YES  |     | NULL    |       |
+| City       | varchar(50) | YES  |     | NULL    |       |
+| State      | varchar(25) | YES  |     | NULL    |       |
+| ZipCode    | varchar(10) | YES  |     | NULL    |       |
+| Telephone  | varchar(15) | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+
+mysql> SELECT SKU, COUNT(*) AS SalesCount
+    -> FROM Orders
+    -> INNER JOIN Customers  ON CustomerID = CustomerID
+    -> WHERE State IN ('Virginia', 'North Carolina', 'South Carolina', 'Georgia')
+    -> GROUP BY SKU
+    -> ORDER BY SalesCount DESC
+    -> LIMIT 3;
+ERROR 1052 (23000): Column 'CustomerID' in on clause is ambiguous
+mysql> SELECT o.SKU, COUNT(*) AS SalesCount
+    -> FROM Orders o
+    -> INNER JOIN Customers c ON o.CustomerID = c.CustomerID
+    -> WHERE c.State IN ('Virginia', 'North Carolina', 'South Carolina', 'Georgia')
+    -> GROUP BY o.SKU
+    -> ORDER BY SalesCount DESC
+    -> LIMIT 3;
++------------+------------+
+| SKU        | SalesCount |
++------------+------------+
+| BAS-48-1 C |        504 |
+| ENT-48-40F |        337 |
+| BAS-08-1 C |        257 |
++------------+------------+
+3 rows in set (0.09 sec)
+
+mysql> describe RMA;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| RMAID   | int         | NO   | PRI | NULL    |       |
+| OrderID | int         | YES  | MUL | NULL    |       |
+| Step    | varchar(50) | YES  |     | NULL    |       |
+| Status  | varchar(15) | YES  |     | NULL    |       |
+| Reason  | varchar(15) | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT SKU, COUNT(*) AS ReturnCount
+    -> FROM RMA
+    -> INNER JOIN Orders ON OrderID = OrderID
+    -> GROUP BY SKU
+    -> ORDER BY ReturnCount DESC
+    -> LIMIT 3;
+ERROR 1052 (23000): Column 'OrderID' in on clause is ambiguous
+mysql> SELECT o.SKU, COUNT(*) AS ReturnCount
+    -> FROM RMA r
+    -> INNER JOIN Orders o ON r.OrderID = o.OrderID
+    -> GROUP BY o.SKU
+    -> ORDER BY ReturnCount DESC
+    -> LIMIT 3;
++------------+-------------+
+| SKU        | ReturnCount |
++------------+-------------+
+| BAS-48-1 C |        8282 |
+| ENT-48-40F |        6118 |
+| ENT-48-10F |        4287 |
++------------+-------------+
+3 rows in set (0.30 sec)
+
+mysql> SELECT o.SKU, COUNT(*) AS ReturnCount
+    -> FROM RMA r
+    -> INNER JOIN Orders o ON r.OrderID = o.OrderID
+    -> WHERE c.State IN ('Washington', 'Oregon', 'Idaho', 'Montana')
+    -> GROUP BY o.SKU
+    -> ORDER BY ReturnCount DESC
+    -> LIMIT 3;
+ERROR 1054 (42S22): Unknown column 'c.State' in 'where clause'
+mysql> SELECT o.SKU, COUNT(*) AS ReturnCount
+    -> FROM RMA r
+    -> INNER JOIN Orders o ON r.OrderID = o.OrderID
+    -> INNER JOIN Customers c ON o.CustomerID = c.CustomerID
+    -> WHERE c.State IN ('Washington', 'Oregon', 'Idaho', 'Montana')
+    -> GROUP BY o.SKU
+    -> ORDER BY ReturnCount DESC
+    -> LIMIT 3;
++------------+-------------+
+| SKU        | ReturnCount |
++------------+-------------+
+| BAS-48-1 C |         697 |
+| ENT-48-40F |         534 |
+| BAS-08-1 C |         379 |
++------------+-------------+
+3 rows in set (0.08 sec)
+
+mysql> 
