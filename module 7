@@ -1,0 +1,31 @@
+mysql> UPDATE Orders
+    -> SET Description = REPLACE(REPLACE(REPLACE(Description, '\r', ''), '\n', ''), '\t', '');
+Query OK, 37994 rows affected (0.90 sec)
+Rows matched: 37998  Changed: 37994  Warnings: 0
+
+mysql> SELECT 
+    -> o.Description AS ProductType,
+    -> COUNT(r.RMAID) AS ReturnCount,
+    -> ROUND(
+    -> COUNT(r.RMAID) * 100.0 / (SELECT COUNT(*) FROM RMA), 2
+    -> ) AS ReturnPercentage
+    -> FROM RMA r
+    -> JOIN Orders o ON r.OrderID = o.OrderID
+    -> GROUP BY o.Description
+    -> ORDER BY ReturnCount DESC;
++----------------------------------------------------+-------------+------------------+
+| ProductType                                        | ReturnCount | ReturnPercentage |
++----------------------------------------------------+-------------+------------------+
+| Basic Switch 10/100/1000 BaseT 48 port             |        8422 |            22.07 |
+| Enterprise Switch 40GigE SFP+ 48 port              |        6213 |            16.28 |
+| Enterprise Switch 10GigE SFP+ 48 port              |        4345 |            11.39 |
+| Basic Switch  10/100/1000 BaseT 8 port             |        4308 |            11.29 |
+| Enterprise Switch 10GigE SFP+ 24 Port              |        4295 |            11.25 |
+| Advanced Switch 10 GigE Copper/Fiber 44 port coppe |        4197 |            11.00 |
+| Advanced Switch 10GigE Copper 24 port              |        4189 |            10.98 |
+| Enterprise Switch 40GigE SFP+ 24 port              |        2159 |             5.66 |
+| Basic Switch 10/100/1000 BaseT 24 port             |          34 |             0.09 |
++----------------------------------------------------+-------------+------------------+
+9 rows in set (0.20 sec)
+
+mysql> 
